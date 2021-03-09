@@ -1,7 +1,7 @@
 import java.util.List;
 
 // --== CS400 File Header Information ==--                                                                                                                                         
-// Author: CS400 Course Staff                                                                                                                                                      
+// Author: Hailey Park                                                                                                                                                      
 // Email: hpark353@wisc.edu                                                                                                                                 
 // Notes: This interface is part of the starter archive for the Back End developers 
 
