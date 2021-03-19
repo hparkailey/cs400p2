@@ -6,9 +6,9 @@ import java.util.List;
 // Notes: This interface is part of the starter archive for the Back End developers 
 
 public interface BackEndInterface {
-  public void add(Reservation reservation);
-  public List<Reservation> selectByOccupant(String occupantName);
-  public List<Reservation> selectByDate(String checkIn,String checkOut);
+  public void add(HotelReservation reservation);
+  public List<HotelReservation> selectByOccupant(String occupantName);
+  public List<HotelReservation> selectByDate(String checkIn,String checkOut);
   public int getSize();
   
 }
