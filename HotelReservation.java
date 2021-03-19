@@ -2,22 +2,21 @@
 // Name: Ethan Knifsend
 // Email: Knifsend@wisc.edu
 // Team: FB blue
-// Role: Backend Developer
+// Role: Data Wrangler
 // TA: Daniel Finer
 // Lecturer: Gary Dahl
 // Notes to Grader: n/a
 
 /**
- * HotelReservation implements HotelReservationInterface. It represents a reservation in a hotel,
- * containing the name of the booker, the date of check-in, the date of check-out, and the room
- * number
+ * HotelReservation represents a reservation in a hotel, containing the name of the booker, the date
+ * of check-in, the date of check-out, and the room number
  *
  * <p>
  * Bugs: n/a
  *
  * @author Ethan Knifsend
  */
-public class HotelReservation implements HotelReservationInterface {
+public class HotelReservation implements Comparable<HotelReservation> {
   private String name;
 
   private String checkInDate; // String that contains date in 01/01/2021 format
@@ -49,7 +48,7 @@ public class HotelReservation implements HotelReservationInterface {
    * 
    * @return name String representing the name of the person who booked this reservation.
    */
-  @Override
+
   public String getName() {
     // TODO Auto-generated method stub
     return this.name;
@@ -60,7 +59,7 @@ public class HotelReservation implements HotelReservationInterface {
    * 
    * @return checkInDate String representing the check-in date of this reservation.
    */
-  @Override
+
   public String getCheckInDate() {
     // TODO Auto-generated method stub
     return this.checkInDate;
@@ -71,7 +70,7 @@ public class HotelReservation implements HotelReservationInterface {
    * 
    * @return checkOutDate String representing the check-out date of this reservation.
    */
-  @Override
+
   public String getCheckOutDate() {
     // TODO Auto-generated method stub
     return this.checkOutDate;
@@ -82,30 +81,9 @@ public class HotelReservation implements HotelReservationInterface {
    * 
    * @return roomNumber int representing the room number of this reservation.
    */
-  @Override
   public int getRoomNumber() {
     // TODO Auto-generated method stub
     return this.roomNumber;
-  }
-
-  /**
-   * compareTo method which compares the check-in dates. If this check-in date is before that of the
-   * inputed hotel reservation, it will return a negative number. If they are the same, it will then
-   * compare the room numbers. If this room number is lower than that of the inputed hotel
-   * reservation, it will return a negative number.
-   * 
-   * @param otherReservation HotelReservationInterface being compared to this HotelReservation.
-   * @return int comparing the check-in date of the inputed HotelReservation and this
-   *         HotelReservation
-   */
-  @Override
-  public int compareTo(HotelReservationInterface otherReservation) {
-    // TODO Auto-generated method stub
-    if (this.checkInDate.equals(otherReservation.getCheckInDate())) {
-      return this.roomNumber - otherReservation.getRoomNumber();
-    } else {
-      return convertDate(this.checkInDate) - convertDate(otherReservation.getCheckInDate());
-    }
   }
 
   /**
@@ -127,5 +105,34 @@ public class HotelReservation implements HotelReservationInterface {
     int yearNum = Integer.parseInt(year);
 
     return dayNum + monthNum * 100 + yearNum * 10000;
+  }
+
+  @Override
+  /**
+   * compareTo method which compares the check-in dates. If this check-in date is before that of the
+   * inputed hotel reservation, it will return a negative number. If they are the same, it will then
+   * compare the room numbers. If this room number is lower than that of the inputed hotel
+   * reservation, it will return a negative number.
+   * 
+   * @param otherReservation HotelReservation being compared to this HotelReservation.
+   * @return int comparing the check-in date of the inputed HotelReservation and this
+   *         HotelReservation
+   */
+
+  public int compareTo(HotelReservation otherReservation) {
+    if (this.checkInDate.equals(otherReservation.getCheckInDate())) {
+      return this.roomNumber - otherReservation.getRoomNumber();
+    } else {
+      return convertDate(this.checkInDate) - convertDate(otherReservation.getCheckInDate());
+    }
+  }
+
+  /**
+   * toString method which returns String with information of this object
+   * 
+   * @return String containing the values of the four variables held by this object
+   */
+  public String toString() {
+    return name + ", " + checkInDate + "-" + checkOutDate + ", room " + roomNumber;
   }
 }
