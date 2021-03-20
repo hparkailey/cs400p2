@@ -175,23 +175,19 @@ public class Frontend {
 	 * @param backEnd
 	 */
 	static void createReservation(Backend backend) {
-		String askFirstName = "\nWhat is the FIRST NAME for the Reservation you would like to make?\t";
-		String askLastName = "What is the LAST NAME for the Reservation you would like to make?\t";
+		String askName = "\nWhat is the NAME for the Reservation you would like to make?\t";
 		String askRoomNum = "What is the ROOM NUMBER for the Reservation you would like to make?\t";
 		String askCheckIn = "What is the CHECK IN DATE (mm/dd/yy) for the Reservation you would like to make?\t";
 		String askCheckOut = "What is the CHECK OUT DATE (mm/dd/yy) for the Reservation you would like to make?\t";
-
-		String firstName = "";
-		String lastName = "";
+		
+		String name = "";
 
 		boolean createRunning = true;
 		boolean askAgain = true;
 
 		while (createRunning) {
-			System.out.print(askFirstName);
-			firstName = scnr.next();
-			System.out.print(askLastName);
-			lastName = scnr.next();
+			System.out.print(askName);
+			name = scnr.nextLine();
 			System.out.print(askRoomNum);
 			int roomNum = scnr.nextInt();
 			System.out.print(askCheckIn);
@@ -199,7 +195,7 @@ public class Frontend {
 			System.out.print(askCheckOut);
 			String checkOut = scnr.next();
 
-			backend.add(firstName, lastName, roomNum, checkIn, checkOut);
+			backend.add(name, roomNum, checkIn, checkOut);
 
 			// ask if user wants to search for again
 			while (askAgain) {
@@ -219,7 +215,7 @@ public class Frontend {
 
 		}
 
-		System.out.println("Your reservation for " + firstName + " " + lastName + " has been succesfully made!!");
+		System.out.println("Your reservation for " + name + " has been succesfully made!!");
 
 	}
 
@@ -283,25 +279,21 @@ public class Frontend {
 	 * @param backend
 	 */
 	static void searchByName(Backend backend) {
-		String askFirstName = "\nWhat is the FIRST NAME the reservation you're looking for is under?\t";
-		String askLastName = "What is the LAST NAME the reservation you're looking for is under?\t";
-		String firstName = "";
-		String lastName = "";
+		String askName = "\nWhat is the NAME (first and last) of the reservation you're looking for is under?\t";
+		String name = "";
 
 		boolean searchNameRunning = true;
 		boolean askAgain = true;
 
 		while (searchNameRunning) {
-			System.out.print(askFirstName);
-			firstName = scnr.next();
-			System.out.print(askLastName);
-			lastName = scnr.next();
+			System.out.print(askName);
+			name = scnr.nextLine();
 			List<?> reservations = null;
 
 			// prints reservations based on name
 			try {
-				reservations = backend.selectByOccupant(firstName);
-				System.out.println("Here are the reservations found for " + firstName + " " + lastName + ":\n");
+				reservations = backend.selectByOccupant(name);
+				System.out.println("Here are the reservations found for " + name + ":\n");
 				for (int i = 0; i < reservations.size(); i++) {
 					System.out.println(reservations.toString());
 				}
