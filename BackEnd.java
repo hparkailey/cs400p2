@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
+
 /**
  * BackEnd class to put reservation data in the red black tree data structure
  * depending on the month of the reservation object
@@ -47,7 +48,10 @@ public class BackEnd {
 		ReservationDataReader dataReaderForRes = new ReservationDataReader();
 		try {
 			reservationList = dataReaderForRes.readDataSet(new StringReader(input));
-			System.out.print(reservationList.get(0).toString());
+			//for (int i = 0; i < reservationList.size(); i++) {
+			//	System.out.print(i+1);
+			//System.out.println( " " + reservationList.get(i).toString());
+			//}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -69,7 +73,11 @@ public class BackEnd {
 		ReservationDataReader dataReaderForRes = new ReservationDataReader();
 		try {
 			reservationList = dataReaderForRes.readDataSet(filepath);
-			System.out.println(reservationList.get(0).toString());
+
+//			for (int i = 0; i < reservationList.size(); i++) {
+//				System.out.print(i+1);
+//			System.out.println(reservationList.get(i).toString());
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -189,42 +197,4 @@ public class BackEnd {
 		}
 	}
 	
-	public static void main(String[] args) throws IOException, DataFormatException {
-		Reader filePathInput;
-		String dataInput = "name,check-in date,check-out date,room number\n"
-				+ "Leslie Smith,07/09/2020,7/11/2020,2019\n" + "Guntur Rashik,06/05/2020,06/07/2020,2015\n"
-				+ "Sarah Smith,08/20/2020,8/29/2020,1000";
-
-		filePathInput = new FileReader("Reservations.csv");
-		BackEnd backEnd1=new BackEnd(filePathInput);
-			backEnd1.add("a", "b", "c", 1);
-			System.out.println("a");
-		BackEnd backEnd2;
-		int expectedSizeForBE1 = 42;
-		int expectedSizeForBE2 = 3;
-		//try {
-			backEnd2 = new BackEnd(dataInput);
-		
-//			if(backEnd1 != null) {
-//				System.out.print("Successfully created backEnd object");
-//			}
-//			if(backEnd1.getSize()!=expectedSizeForBE1) {
-//				System.out.print("Did not successfully add reservations to the tree");
-//			}
-//			if(backEnd2.getSize()!=expectedSizeForBE2) {
-//				System.out.print("Did not successfully add reservations to the tree");
-//			}
-//		} catch (FileNotFoundException e1) {
-//			e1.printStackTrace();
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		} catch (DataFormatException e1) {
-//			e1.printStackTrace();
-//		} catch (NullPointerException e) {
-//			System.out.print("The backEnd object is still null");
-//		}
-		
-		
-	}
-
 }

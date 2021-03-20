@@ -35,7 +35,7 @@ public class BackEndDeveloperTests {
 		filePathInput = new FileReader("Reservations.csv");
 		BackEnd backEnd1;
 		BackEnd backEnd2;
-		int expectedSizeForBE1 = 42;
+		int expectedSizeForBE1 = 41;
 		int expectedSizeForBE2 = 3;
 		try {
 			backEnd1 = new BackEnd(filePathInput);
@@ -85,9 +85,9 @@ public class BackEndDeveloperTests {
 		try {
 			backEnd = new BackEnd(filePathInput);
 			backEnd.add(nameRes1, checkInDate1, checkOutDate1, roomNumberRes1);
-			assertEquals(43, backEnd.getSize());
+			assertEquals(42, backEnd.getSize());
 			backEnd.add(nameRes2, checkInDate2, checkOutDate2, roomNumberRes2);
-			assertEquals(44, backEnd.getSize());
+			assertEquals(43, backEnd.getSize());
 		} catch (IOException | DataFormatException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
