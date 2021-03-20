@@ -6,7 +6,8 @@
 // Role: Backend Developer
 // TA: Daniel Finer
 // Lecturer: Gary Dahl
-// Notes to Grader: n/a
+// Notes to Grader: Utilized red black tree data structure to add HotelReservation objects but used linear search when trying to search
+// for a specific HotelReservation object using a specific field (already approved by Daniel)
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.FileNotFoundException;
@@ -43,6 +44,7 @@ public class BackEnd {
 	 * elements in the corresponding RedBlackTree (depending on month)
 	 * 
 	 * @param input the data specified by the user to input the reservation
+	 * @throws FileNotFoundException if the csv file is not found
 	 */
 	public BackEnd(String input) {
 		ReservationDataReader dataReaderForRes = new ReservationDataReader();
@@ -67,17 +69,12 @@ public class BackEnd {
 	/**
 	 * Constructor for BackEnd object which takes a filepath from the user (console)
 	 * 
-	 * @param filepath
+	 * @param filepath Reader object that contains the filepath
 	 */
 	public BackEnd(Reader filepath) throws FileNotFoundException, IOException, DataFormatException {
 		ReservationDataReader dataReaderForRes = new ReservationDataReader();
 		try {
-			reservationList = dataReaderForRes.readDataSet(filepath);
-
-//			for (int i = 0; i < reservationList.size(); i++) {
-//				System.out.print(i+1);
-//			System.out.println(reservationList.get(i).toString());
-			
+			reservationList = dataReaderForRes.readDataSet(filepath);		
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -99,8 +96,9 @@ public class BackEnd {
 		july = new RedBlackTree<HotelReservation>();
 		august = new RedBlackTree<HotelReservation>();
 		for (int i = 0; i < reservationList.size(); i++) {
-			HotelReservation res = reservationList.get(i);
-			redBlackTreeMonthSelector(res);}
+			HotelReservation res = reservationList.get(i); // get every HotelReservation Object from the list
+			redBlackTreeMonthSelector(res); // add it to the corresponding month tree with the help of redBlackTreeMonthSelector
+			}
 		//}
 	}
 
@@ -118,8 +116,8 @@ public class BackEnd {
 	public void add(String name, String checkInDate, String checkOutDate, int roomNumber)
 			throws IllegalArgumentException {
 		HotelReservation newReservation;
-		newReservation = new HotelReservation(name, checkInDate, checkOutDate, roomNumber);
-		redBlackTreeMonthSelector(newReservation);
+		newReservation = new HotelReservation(name, checkInDate, checkOutDate, roomNumber); // create a new HotelReservation object from 
+		redBlackTreeMonthSelector(newReservation); // call the private helper method to determine where to add the node to
 
 	}
 
@@ -132,9 +130,9 @@ public class BackEnd {
 	 *         contains all HotelReservation that has matches the occupantName
 	 */
 	public List<HotelReservation> selectByOccupant(String occupantName) {
-		for (int i = 0; i < reservationList.size(); i++) {
+		for (int i = 0; i < reservationList.size(); i++) { // iterate through the reservationList
 			if (reservationList.get(i).getName().equals(occupantName)) {
-				this.reservationListBasedOnName.add(reservationList.get(i));
+				this.reservationListBasedOnName.add(reservationList.get(i)); // check if there are any HotelReservation Objects with the same occupant name
 			}
 		}
 		return this.reservationListBasedOnName;
@@ -151,10 +149,9 @@ public class BackEnd {
 	 *         checkOut
 	 */
 	public List<HotelReservation> selectByDate(String checkIn, String checkOut) {
-		
-		for (int i = 0; i < reservationList.size(); i++) {
+		for (int i = 0; i < reservationList.size(); i++) { // iterate through the reservationList
 			if (reservationList.get(i).getCheckInDate().equals(checkIn)&& reservationList.get(i).getCheckOutDate().equals(checkOut)) {
-				this.reservationListBasedOnDate.add(reservationList.get(i));
+				this.reservationListBasedOnDate.add(reservationList.get(i)); // check if there are any HotelReservation objects matches the checkIn and checkOut dates
 			}
 		}
 		return this.reservationListBasedOnDate;
@@ -171,7 +168,7 @@ public class BackEnd {
 		int juneSize = june.size();
 		int julySize = july.size();
 		int augustSize = august.size();
-		this.size = juneSize + julySize + augustSize;
+		this.size = juneSize + julySize + augustSize; // add up all the number of nodes from the three trees
 		return this.size;
 	}
 
@@ -184,9 +181,9 @@ public class BackEnd {
 	private void redBlackTreeMonthSelector(HotelReservation reservation) {
 		if (reservation.getCheckInDate().startsWith("06")) { // check to see if the reservation checkInDate is on the month of June
 			june.insert(reservation);
-		} else if (reservation.getCheckInDate().startsWith("07")) {
+		} else if (reservation.getCheckInDate().startsWith("07")) { // check to see if the reservation checkInDate is on the month of July
 			july.insert(reservation);
-		} else if (reservation.getCheckInDate().startsWith("08")) {
+		} else if (reservation.getCheckInDate().startsWith("08")) { // check to see if the reservation checkInDate is on the month of August
 			august.insert(reservation);
 		} else {
 			System.out
@@ -195,15 +192,4 @@ public class BackEnd {
 			return;
 		}
 	}
-	public static void main(String[] args) throws IOException, DataFormatException {
-		Reader filePathInput;
-		filePathInput = new FileReader("Reservations.csv");
-		BackEnd backEnd;
-			backEnd = new BackEnd(filePathInput);
-			backEnd.selectByDate("06/27/2020","07/01/2020"); // first try
-backEnd.selectByDate("06/01/2020", "06/07/2020"); // second attempt
-			
-			System.out.println(backEnd.reservationListBasedOnDate.size());
-	}
-	
 }

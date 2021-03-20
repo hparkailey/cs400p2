@@ -23,7 +23,8 @@ public class BackEndDeveloperTests {
 	 * Test to see if a BackEnd object is created correctly (check to see if size is
 	 * correct based on the data input and BackEnd is not null)
 	 * 
-	 * @throws FileNotFoundException
+	 * @throws FileNotFoundException if csv file is not found
+	 * @throws NullPointerException if BackEnd object is not created
 	 */
 	@Test
 	public void testBackEndObject() throws NullPointerException, FileNotFoundException {
@@ -33,17 +34,17 @@ public class BackEndDeveloperTests {
 				+ "Sarah Smith,08/20/2020,8/29/2020,1000";
 
 		filePathInput = new FileReader("Reservations.csv");
-		BackEnd backEnd1;
+		BackEnd backEnd1; 
 		BackEnd backEnd2;
 		int expectedSizeForBE1 = 41;
 		int expectedSizeForBE2 = 3;
 		try {
-			backEnd1 = new BackEnd(filePathInput);
-			backEnd2 = new BackEnd(dataInput);
-			if (backEnd1.getSize() != expectedSizeForBE1) {
+			backEnd1 = new BackEnd(filePathInput); // backEnd object using the csv file as the data input
+			backEnd2 = new BackEnd(dataInput); // backEnd object constructed using the 
+			if (backEnd1.getSize() != expectedSizeForBE1) { // test to check if the size corresponds to the number of rows in the csv file (41)
 				fail("Did not successfully add reservations to the tree");
 			}
-			if (backEnd2.getSize() != expectedSizeForBE2) {
+			if (backEnd2.getSize() != expectedSizeForBE2) { // test to check if the size corresponds to the number of elements from the dataInput (3)
 				fail("Did not successfully add reservations to the tree");
 			}
 		} catch (FileNotFoundException e1) {
@@ -66,10 +67,11 @@ public class BackEndDeveloperTests {
 	 */
 	@Test
 	public void testAddingReservation() throws FileNotFoundException {
-		String nameRes1 = "Michael Jordan";
+		// Initializing all the required fields to make the HotelReservation objects in order to add it
+		String nameRes1 = "Michael Jordan"; 
 		String nameRes2 = "Sandra Bullock";
 		String checkInDate1 = "08/08/2020";
-		String checkInDate2 = "08/10/2020";
+		String checkInDate2 = "08/08/2020";
 		String checkOutDate1 = "08/18/2020";
 		String checkOutDate2 = "08/14/2020";
 		int roomNumberRes1 = 3124;
@@ -81,10 +83,10 @@ public class BackEndDeveloperTests {
 
 		try {
 			backEnd = new BackEnd(filePathInput);
-			backEnd.add(nameRes1, checkInDate1, checkOutDate1, roomNumberRes1);
-			assertEquals(42, backEnd.getSize());
-			backEnd.add(nameRes2, checkInDate2, checkOutDate2, roomNumberRes2);
-			assertEquals(43, backEnd.getSize());
+			backEnd.add(nameRes1, checkInDate1, checkOutDate1, roomNumberRes1); // add a new reservation
+			assertEquals(42, backEnd.getSize()); // see if the size increases by 1
+			backEnd.add(nameRes2, checkInDate2, checkOutDate2, roomNumberRes2); // add a new Reservation
+			assertEquals(43, backEnd.getSize()); // see if the size increases by 1
 		} catch (IOException | DataFormatException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
@@ -105,7 +107,7 @@ public class BackEndDeveloperTests {
 		BackEnd backEnd;
 		try {
 			backEnd = new BackEnd(filePathInput);
-			backEnd.selectByDate("06/27/2020", "07/01/2020"); // first try
+			backEnd.selectByDate("06/27/2020", "07/01/2020"); // first attempt to look for a HotelReservationObject by checkIn and checkOut date
 			if (!backEnd.reservationListBasedOnDate.get(0).toString()
 					.equals("Denis Villeneuve, 06/27/2020-07/01/2020, room 2049")) {
 				fail("Did not get correct reservation");
@@ -130,7 +132,9 @@ public class BackEndDeveloperTests {
 	 * Tests if the correct node is returned when we try to find a reservation by
 	 * passing the occupant's name
 	 * 
-	 * @throws FileNotFoundException
+	 * @throws DataFormatException if there are any incorrect data format when we try to read the data from the user
+	 * @throws IOException if there is an error when trying to input/output data
+	 * @throws FileNotFoundException if the csv file is not found
 	 */
 	@Test
 	public void testSelectByOccupant() throws FileNotFoundException {
@@ -162,9 +166,9 @@ public class BackEndDeveloperTests {
 	 * Adds nodes with same dates and checks if the order is correct (based on room
 	 * number, larger room number should be on the right side of parent while
 	 * smaller room number should be on the left side)
-	 * @throws DataFormatException 
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
+	 * @throws DataFormatException if there are any incorrect data format when we try to read the data from the user
+	 * @throws IOException if there is an error when trying to input/output data
+	 * @throws FileNotFoundException if the csv file is not found
 	 */
 	@Test
 	public void testOrder() throws FileNotFoundException, IOException, DataFormatException {
@@ -173,7 +177,8 @@ public class BackEndDeveloperTests {
 		BackEnd backEnd;
 			backEnd = new BackEnd(filePathInput);
 			String expected = "[ Matthew McConaughey, 06/01/2020-06/12/2020, room 2020,"
-					+ " Calvin Johnson, 06/01/2020-06/15/2020, room 2137, Mitchell Trubisky, 06/01/2020-08/30/2020, "
+					+ " Calvin Johnson, 06/01/2020-06/15/2020, room 2137, "
+					+ "Mitchell Trubisky, 06/01/2020-08/30/2020, "
 					+ "room 3079, Barack Obama, 06/01/2020-06/07/2020, room 4128, "
 					+ "Gaby Setyawan, 06/02/2020-06/11/2020, room 3149, "
 					+ "Jennifer Lawrence, 06/04/2020-06/10/2020, room 1010, "
