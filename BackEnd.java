@@ -34,8 +34,8 @@ public class BackEnd {
 	protected RedBlackTree<HotelReservation> july; // red black tree for July reservations
 	protected RedBlackTree<HotelReservation> august; // red black tree for August reservations
 	private int size; // total number of nodes (reservations)
-	protected List<HotelReservation> reservationListBasedOnName; // list of HotelReservation Objects based on the name
-	protected List<HotelReservation> reservationListBasedOnDate; // list of HotelReservation Objects based on the
+	protected List<HotelReservation> reservationListBasedOnName= new ArrayList<HotelReservation>(); // list of HotelReservation Objects based on the name
+	protected List<HotelReservation> reservationListBasedOnDate = new ArrayList<HotelReservation>(); // list of HotelReservation Objects based on the
 																	// checkInDate and checkOutDate
 
 	/**
@@ -100,8 +100,8 @@ public class BackEnd {
 		august = new RedBlackTree<HotelReservation>();
 		for (int i = 0; i < reservationList.size(); i++) {
 			HotelReservation res = reservationList.get(i);
-			redBlackTreeMonthSelector(res);
-		}
+			redBlackTreeMonthSelector(res);}
+		//}
 	}
 
 	/**
@@ -132,15 +132,14 @@ public class BackEnd {
 	 *         contains all HotelReservation that has matches the occupantName
 	 */
 	public List<HotelReservation> selectByOccupant(String occupantName) {
-		reservationListBasedOnName = new ArrayList<HotelReservation>();
 		for (int i = 0; i < reservationList.size(); i++) {
 			if (reservationList.get(i).getName().equals(occupantName)) {
-				reservationListBasedOnName.add(reservationList.get(i));
+				this.reservationListBasedOnName.add(reservationList.get(i));
 			}
 		}
-		return reservationListBasedOnName;
+		return this.reservationListBasedOnName;
 	}
-
+//
 	/**
 	 * Gets the correct node from the red black trees based on check in and check
 	 * out date
@@ -152,13 +151,13 @@ public class BackEnd {
 	 *         checkOut
 	 */
 	public List<HotelReservation> selectByDate(String checkIn, String checkOut) {
-		reservationListBasedOnDate = new ArrayList<HotelReservation>();
+		
 		for (int i = 0; i < reservationList.size(); i++) {
-			if (reservationList.get(i).getName().equals(checkIn) && reservationList.get(i).getName().equals(checkOut)) {
-				reservationListBasedOnName.add(reservationList.get(i));
+			if (reservationList.get(i).getCheckInDate().equals(checkIn)&& reservationList.get(i).getCheckOutDate().equals(checkOut)) {
+				this.reservationListBasedOnDate.add(reservationList.get(i));
 			}
 		}
-		return reservationListBasedOnDate;
+		return this.reservationListBasedOnDate;
 	}
 
 	/**
@@ -195,6 +194,16 @@ public class BackEnd {
 							+ "in June/July/August");
 			return;
 		}
+	}
+	public static void main(String[] args) throws IOException, DataFormatException {
+		Reader filePathInput;
+		filePathInput = new FileReader("Reservations.csv");
+		BackEnd backEnd;
+			backEnd = new BackEnd(filePathInput);
+			backEnd.selectByDate("06/27/2020","07/01/2020"); // first try
+backEnd.selectByDate("06/01/2020", "06/07/2020"); // second attempt
+			
+			System.out.println(backEnd.reservationListBasedOnDate.size());
 	}
 	
 }

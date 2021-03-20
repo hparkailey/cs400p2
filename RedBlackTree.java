@@ -1,19 +1,15 @@
-// --== CS400 File Header Information ==--
-// Name: Hailey Park
-// Email: hpark353@wisc.edu
-// Team: FB
-// TA: Daniel Finer
-// Lecturer: Gary
-// Notes to Grader: <optional extra notes>
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
-import java.util.Random;
 import java.util.Stack;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+// --== CS400 File Header Information ==--
+// Name: Ethan Donald Knifsend
+// Email: knifsend@wisc.edu
+// Team: FB
+// TA: Daniel Finer
+// Lecturer: Gary Dahl
+// Notes to Grader: <optional extra notes>
 
 /**
  * Red-Black Tree implementation with a Node inner class for representing the nodes of the tree.
@@ -38,7 +34,6 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
 
     public Node(T data) {
       this.data = data;
-      this.isBlack = false; // new node RED by default
     }
 
     /**
@@ -102,7 +97,8 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
     if (root == null) {
       root = newNode;
       size++;
-      this.root.isBlack = true; // always set root to be black //WEEK 7
+
+      root.isBlack = true;
       return true;
     } // add first node to an empty tree
     else {
@@ -111,7 +107,8 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
         size++;
       else
         throw new IllegalArgumentException("This RedBlackTree already contains that value.");
-      this.root.isBlack = true; // always set root to be black // WEEK 7
+
+      root.isBlack = true;
       return returnValue;
     }
   }
@@ -124,6 +121,7 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
    * @param subtree is the reference to a node within this tree which the newNode should be inserted
    *                as a descenedent beneath
    * @return true is the value was inserted in subtree, false if not
+   * @see enforceRBTreePropertiesAfterInsert()
    */
   private boolean insertHelper(Node<T> newNode, Node<T> subtree) {
     int compare = newNode.data.compareTo(subtree.data);
@@ -136,7 +134,8 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
       if (subtree.leftChild == null) { // left subtree empty, add here
         subtree.leftChild = newNode;
         newNode.parent = subtree;
-        enforceRBTreePropertiesAfterInsert(newNode); // week 7
+
+        enforceRBTreePropertiesAfterInsert(newNode);
         return true;
         // otherwise continue recursive search for location to insert
       } else
@@ -148,7 +147,8 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
       if (subtree.rightChild == null) { // right subtree empty, add here
         subtree.rightChild = newNode;
         newNode.parent = subtree;
-        enforceRBTreePropertiesAfterInsert(newNode); // week 7
+
+        enforceRBTreePropertiesAfterInsert(newNode);
         return true;
         // otherwise continue recursive search for location to insert
       } else
@@ -157,82 +157,86 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
   }
 
   /**
-   * Resolves a red child under a red parent red black tree property violations that are introduced
-   * by inserting new nodes into a red black tree.
+   * Private helper that ensures there are no violations present. If there are, it resolves them.
    * 
-   * This method may be called recursively,in which case the input parameter may reference a
-   * different red node in the tree that potentially has a red parent node. While doing so, all
-   * other red black tree properties must also be preserved.
-   * 
-   * @param newRed: a newly added red node
+   * @param newNode Node<T> that was added
+   * @see caseType()
+   * @see rotate()
+   * @see checkIsBlack
    */
-  private void enforceRBTreePropertiesAfterInsert(Node<T> newRed) {
-    Node<T> parent = newRed.parent;
-    Node<T> grandParent = parent.parent;
-    boolean parentIsBlack = parent.isBlack;
+  private void enforceRBTreePropertiesAfterInsert(Node<T> newNode) {
+    if (!newNode.equals(root) && !newNode.isBlack && !checkIsBlack(newNode.parent)) {
+      if (caseType(newNode) == 1) {
+        newNode.parent.isBlack = true;
+        newNode.parent.parent.isBlack = false;
 
-    Node<T> parentSibling;
-    boolean sameSide;
-    boolean siblingIsBlack;
+        rotate(newNode.parent, newNode.parent.parent);
+      } else if (caseType(newNode) == 2) {
+        rotate(newNode, newNode.parent);
 
-    // when red property is violated
-    if (!newRed.isBlack && !parent.isBlack) {
+        newNode.isBlack = true;
+        newNode.parent.isBlack = false;
 
-      // if parent is left child, sibling is right child
-      if (parent != null && parent.equals(grandParent.leftChild)) {
-        parentSibling = grandParent.rightChild;
-        // opposite side if newNode is left child
-        sameSide = ((newRed.isLeftChild()) ? false : true);
+        rotate(newNode, newNode.parent);
+      } else {
+        newNode.parent.isBlack = true;
+        newNode.parent.parent.isBlack = false;
 
-      } else { // parent is right child, sibling is left child
-        parentSibling = grandParent.leftChild;
-        sameSide = ((newRed.isLeftChild()) ? true : false);
-      }
-      // treat null nodes as black
-
-      siblingIsBlack = ((parentSibling == null) ? true : parentSibling.isBlack);
-      // System.out.println(sameSide);// TODO ????
-      // case 1 : sibling is Black and on the opposite side
-      if (siblingIsBlack && !sameSide) {
-        rotate(parent, grandParent); // rotate
-        siblingIsBlack = ((parentSibling == null) ? true : parentSibling.isBlack);
-        Node<T> temp = grandParent;
-        grandParent = parent;
-        parent = temp;
-        parent.isBlack = ((parentIsBlack) ? false : true); // swap colors
-        grandParent.isBlack = ((grandParent.isBlack) ? false : true);
-        return;
-        // parentSibling.isBlack = ((parentSibling.isBlack)? false: true);
-      }
-
-      // case 2: sibling is Black and on the same side
-      else if (siblingIsBlack && sameSide) {
-        rotate(newRed, parent);
-        newRed = parent.leftChild;
-        enforceRBTreePropertiesAfterInsert(newRed);
-      }
-
-      // case 3 : sibling is Red
-      else {
-        parent.isBlack = true;
-        parentSibling.isBlack = true;
-        grandParent.isBlack = false;
-        if (grandParent.parent != null && !grandParent.parent.isBlack) {
-          enforceRBTreePropertiesAfterInsert(grandParent);
+        if (newNode.parent.isLeftChild()) {
+          if (newNode.parent.parent.rightChild != null) {
+            newNode.parent.parent.rightChild.isBlack = true;
+          }
+        } else {
+          if (newNode.parent.parent.leftChild != null) {
+            newNode.parent.parent.leftChild.isBlack = true;
+          }
         }
-        // if grandParent == root
-        else if (grandParent != null && grandParent.equals(root)) {
-          grandParent.isBlack = true;
-          // enforceRBTreePropertiesAfterInsert(newRed);
-        }
-        return;
 
+        enforceRBTreePropertiesAfterInsert(newNode.parent.parent);
       }
-
-    } else {
-      return;
     }
+  }
 
+  /**
+   * Private helper method that checks which case type the violation is
+   * 
+   * @param newNode Node<T> that was added and is causing a violation
+   * @return int representing the case type
+   * @see checkIsBlack
+   */
+  private int caseType(Node<T> newNode) {
+    if (newNode.parent.isLeftChild()) {
+      if (checkIsBlack(newNode.parent.parent.rightChild)) {
+        if (newNode.isLeftChild()) {
+          return 1;
+        } else {
+          return 2;
+        }
+      } else {
+        return 3;
+      }
+    } else {
+      if (checkIsBlack(newNode.parent.parent.leftChild)) {
+        if (!newNode.isLeftChild()) {
+          return 1;
+        } else {
+          return 2;
+        }
+      } else {
+        return 3;
+      }
+    }
+  }
+
+  /**
+   * Private helper method that checks if the node is black (either null or isBlack == true)
+   */
+  private boolean checkIsBlack(Node<T> newNode) {
+    if (newNode == null || newNode.isBlack == true) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 
@@ -251,81 +255,51 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
    *                                  initially (pre-rotation) related that way
    */
   private void rotate(Node<T> child, Node<T> parent) throws IllegalArgumentException {
-
-    Node<T> newParent = new Node<T>(parent.data);
-    newParent.leftChild = parent.leftChild;
-    newParent.rightChild = parent.rightChild;
-
-    Node<T> newChild = new Node<T>(child.data);
-    newChild.leftChild = child.leftChild;
-    newChild.rightChild = child.rightChild;
-
-
-    // left child
-    if (parent.leftChild != null && parent.leftChild.equals(child)) {
-
-      parent.data = child.data;
-      // child.parent = parent.parent;
-      parent.leftChild = child.leftChild;
-      if (parent.leftChild != null) {
-        parent.leftChild.parent = parent;
-      }
-      parent.rightChild = child.rightChild;
-      newParent.leftChild = null;
-      if (parent.rightChild != null) {
-        parent.rightChild.parent = parent;
-        parent.rightChild.rightChild = newParent;
-        newParent.parent = parent.rightChild;
-      } else {
-        parent.rightChild = newParent;
-        newParent.parent = parent;
-      }
-
-      return;
-
+    if (child.parent.equals(parent) && child.isLeftChild()) {
+      rotateRight(child, parent);
+    } else if (child.parent.equals(parent) && parent.rightChild.equals(child)) {
+      rotateLeft(child, parent);
+    } else {
+      throw new IllegalArgumentException("The nodes are unrelated");
     }
-
-
-    // right child
-    else if (parent.rightChild != null && parent.rightChild.equals(child)) {
-      parent.data = child.data;
-      parent.rightChild = child.rightChild;
-      if(parent.rightChild != null) {
-        parent.rightChild.parent = parent;
-      }
-      child = child.rightChild;
-
-      newParent.rightChild = null;
-      parent.leftChild = newParent;
-      if(newParent != null) {
-        newParent.parent = parent;
-      }
-
-      if (parent.leftChild != null && newChild != null) {
-        parent.leftChild.rightChild = newChild.leftChild;
-        if (parent.leftChild.rightChild != null) {
-          parent.leftChild.rightChild.parent = parent.leftChild;
-        }
-      } else {
-        parent.leftChild = newChild.leftChild;
-       // parent.leftChild = newParent;
-        if (parent.leftChild != null) {
-          parent.leftChild.parent = parent;
-        }
-      }
-
-      return;
-
-    }
-
-
-    else {
-      throw new IllegalArgumentException("The provided nodes are not related.");
-    }
-
-
+    // TODO: Implement this method.
   }
 
+  private void rotateRight(Node<T> child, Node<T> parent) {
+
+    parent.leftChild = child.rightChild;
+    if (child.rightChild != null) {
+      child.rightChild.parent = parent;
+    }
+
+    child.rightChild = parent;
+    setParent(child, parent);
+  }
+
+  private void rotateLeft(Node<T> child, Node<T> parent) {
+    parent.rightChild = child.leftChild;
+    if (child.leftChild != null) {
+      child.leftChild.parent = parent;
+    }
+
+    child.leftChild = parent;
+    setParent(child, parent);
+  }
+
+  private void setParent(Node<T> temp, Node<T> parent) {
+    if (parent.equals(root) || parent.parent == null) {
+      temp.parent = null;
+      root = temp;
+    } else if (parent.isLeftChild()) {
+      temp.parent = parent.parent;
+      parent.parent.leftChild = temp;
+    } else {
+      temp.parent = parent.parent;
+      parent.parent.rightChild = temp;
+    }
+
+    parent.parent = temp;
+  }
 
   /**
    * Get the size of the tree (its number of nodes).
@@ -481,50 +455,4 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
     return sb.toString();
   }
 
-  public static void main(String[] args) {
-    RedBlackTree<Integer> rbt1 = new RedBlackTree<>();
-
-    rbt1.insert(50);
-    rbt1.insert(30);
-    rbt1.insert(70);
-    rbt1.insert(10);
-    rbt1.insert(40);
-    rbt1.insert(60);
-    rbt1.insert(100);
-
-    rbt1.rotate(rbt1.root.leftChild.rightChild, rbt1.root.leftChild);
-    // System.out.println(rbt1.root.toString());
-    if (!rbt1.toString().equals("[ 10, 30, 40, 50, 60, 70, 100 ]")) {
-      System.out.println("received: " + rbt1.toString());
-      // fail("This test has failed");
-    }
-
-
-    RedBlackTree<Integer> rbt2 = new RedBlackTree<>();
-    rbt2.insert(50);
-    rbt2.insert(30);
-    rbt2.insert(70);
-    rbt2.insert(10);
-    rbt2.insert(40);
-    rbt2.insert(60);
-    rbt2.insert(100);
-    rbt2.rotate(rbt2.root.leftChild, rbt2.root);
-    // System.out.println("RBT2 : " + rbt2.toString());
-    if (!rbt2.toString().equals("[ 10, 30, 40, 50, 60, 70, 100 ]")) {
-      System.out.println("failed: " + rbt2.toString());
-      // fail("This test has failed");
-    }
-
-    RedBlackTree<Integer> rbt3 = new RedBlackTree<>();
-    rbt3.insert(78);
-    rbt3.insert(45);
-    rbt3.insert(28);
-    // rbt3.rotate(rbt3.root.leftChild, rbt3.root);
-    if (!rbt3.root.toString().equals("[45, 28, 78]")) {
-      System.out
-          .println("The rotation output doesn't match the expected value." + rbt3.root.toString());
-    }
-
-
-  }
 }

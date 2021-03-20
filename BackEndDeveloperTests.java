@@ -40,13 +40,10 @@ public class BackEndDeveloperTests {
 		try {
 			backEnd1 = new BackEnd(filePathInput);
 			backEnd2 = new BackEnd(dataInput);
-			if(backEnd1 != null) {
-				System.out.print("Successfully created backEnd object");
-			}
-			if(backEnd1.getSize()!=expectedSizeForBE1) {
+			if (backEnd1.getSize() != expectedSizeForBE1) {
 				fail("Did not successfully add reservations to the tree");
 			}
-			if(backEnd2.getSize()!=expectedSizeForBE2) {
+			if (backEnd2.getSize() != expectedSizeForBE2) {
 				fail("Did not successfully add reservations to the tree");
 			}
 		} catch (FileNotFoundException e1) {
@@ -108,13 +105,13 @@ public class BackEndDeveloperTests {
 		BackEnd backEnd;
 		try {
 			backEnd = new BackEnd(filePathInput);
-			backEnd.selectByDate("07/07/2020", "08/01/2020");
-			if (!backEnd.reservationListBasedOnName.get(0).toString()
-					.equals("Ned Stark, 07/07/2020-08/01/2020, room 3011")) {
+			backEnd.selectByDate("06/27/2020", "07/01/2020"); // first try
+			if (!backEnd.reservationListBasedOnDate.get(0).toString()
+					.equals("Denis Villeneuve, 06/27/2020-07/01/2020, room 2049")) {
 				fail("Did not get correct reservation");
 			}
-			backEnd.selectByDate("06/01/2020", "06/07/2020");
-			if (!backEnd.reservationListBasedOnName.get(1).toString()
+			backEnd.selectByDate("06/01/2020", "06/07/2020"); // second attempt
+			if (!backEnd.reservationListBasedOnDate.get(1).toString()
 					.equals("Barack Obama, 06/01/2020-06/07/2020, room 4128")) {
 				fail("Did not get correct reservation");
 			}
@@ -140,22 +137,26 @@ public class BackEndDeveloperTests {
 		Reader filePathInput;
 		filePathInput = new FileReader("Reservations.csv");
 		BackEnd backEnd;
-		String expected;
+		String expectedFirst;
+		String expectedSecond;
 		try {
 			backEnd = new BackEnd(filePathInput);
-			backEnd.selectByOccupant("MartinGarrix");
-			expected = "Martin Garrix, 07/22/2020-07/31/2020, room 2044";
-			if(!backEnd.reservationListBasedOnName.get(0).toString().equals(expected)) {
+			backEnd.selectByOccupant("Martin Garrix");
+			expectedFirst = "Martin Garrix, 07/22/2020-07/31/2020, room 2044";
+			if (!backEnd.reservationListBasedOnName.get(0).toString().equals(expectedFirst)) {
 				fail("Did not get the correct reservation");
 			}
-		} 
-		catch (FileNotFoundException e) {
+			expectedSecond = "Barack Obama, 06/01/2020-06/07/2020, room 4128";
+			backEnd.selectByOccupant("Barack Obama");
+			if (!backEnd.reservationListBasedOnName.get(1).toString().equals(expectedSecond)) {
+				fail("Did not get the correct reservation");
+			}
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}catch (IOException | DataFormatException e) {
+		} catch (IOException | DataFormatException e) {
 			e.printStackTrace();
 		}
 	}
-
 
 	/**
 	 * Adds nodes with same dates and checks if the order is correct (based on room
@@ -171,6 +172,23 @@ public class BackEndDeveloperTests {
 		filePathInput = new FileReader("Reservations.csv");
 		BackEnd backEnd;
 			backEnd = new BackEnd(filePathInput);
-			System.out.print(backEnd.june.toString());
+			String expected = "[ Matthew McConaughey, 06/01/2020-06/12/2020, room 2020,"
+					+ " Calvin Johnson, 06/01/2020-06/15/2020, room 2137, Mitchell Trubisky, 06/01/2020-08/30/2020, "
+					+ "room 3079, Barack Obama, 06/01/2020-06/07/2020, room 4128, "
+					+ "Gaby Setyawan, 06/02/2020-06/11/2020, room 3149, "
+					+ "Jennifer Lawrence, 06/04/2020-06/10/2020, room 1010, "
+					+ "Paul Atreides, 06/11/2020-06/29/2020, room 3122,"
+					+ " Zion Williamson, 06/12/2020-06/25/2020, room 1111, "
+					+ "Davis Mills, 06/20/2020-06/23/2020, room 4079, "
+					+ "Meghan Markle, 06/23/2020-07/10/2020, room 2021, "
+					+ "Damian Lillard, 06/24/2020-07/07/2020, room 5132, "
+					+ "Denis Villeneuve, 06/27/2020-07/01/2020, room 2049, "
+					+ "Jessica Xu, 06/28/2020-06/30/2020, room 5099, "
+					+ "Sandra Day-O'Connor , 06/29/2020-07/06/2020, room 1141, "
+					+ "Kevin Faulconer, 06/29/2020-07/05/2020, room 4044, "
+					+ "Ryan Gosling, 06/30/2020-07/06/2020, room 1010 ]";
+			if(!backEnd.june.toString().equals(expected)) {
+				fail("Didn't get the correct order, need to check red black tree again");
+			}
 	}
 }
