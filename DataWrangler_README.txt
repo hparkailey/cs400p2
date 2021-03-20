@@ -1,10 +1,10 @@
 BackEndDeveloper README for Project Two (CS400 @ UW Madison)
 ========================================================
 
-Name of BackEndDeveloper: <enter your complete name here>
-@wisc.edu Email of BackEndDeveloper: <enter your @wisc.edu email address here>
-Group: <enter your two letter group name here>
-Team: <enter your team color: red, blue, or purple, here>
+Name of DataWrangler: Ethan Donald Knifsend
+@wisc.edu Email of DataWrangler: knifsend@wisc.edu
+Group: FB
+Team: blue
 
 Files Written by Me:
 --------------------
