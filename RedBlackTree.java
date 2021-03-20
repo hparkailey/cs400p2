@@ -249,6 +249,8 @@ public class RedBlackTree<T extends Comparable<T>> implements SortedCollectionIn
 				parent.leftChild.parent = parentLeftRotated;
 			}
 		} else { // if there child and parent, don't have a parent-child relationship
+			System.out.println(child);
+			System.out.println(parent);
 			throw new IllegalArgumentException("The parameters passed does not have a parent child relationship");
 		}
 	}
