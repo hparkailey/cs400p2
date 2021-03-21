@@ -23,7 +23,7 @@ import java.util.zip.DataFormatException;
  *
  * @author Ethan Knifsend
  */
-public class ReservationDataReader implements ReservationDataReaderInterface {
+public class ReservationDataReader {
 
   /**
    * Reads the inputed Reader and converts the csv file entries into a list of HotelReservation
@@ -36,13 +36,12 @@ public class ReservationDataReader implements ReservationDataReaderInterface {
    * @throws IOException
    * @throws DataFormatException
    */
-  @Override
-  public List<HotelReservationInterface> readDataSet(Reader inputFileReader)
+  public List<HotelReservation> readDataSet(Reader inputFileReader)
       throws FileNotFoundException, IOException, DataFormatException {
     // TODO Auto-generated method stub
 
     try {
-      List<HotelReservationInterface> reservations = new ArrayList<HotelReservationInterface>();
+      List<HotelReservation> reservations = new ArrayList<HotelReservation>();
       BufferedReader reader = new BufferedReader(inputFileReader);
 
       String[] header = reader.readLine().split(",");
@@ -112,4 +111,6 @@ public class ReservationDataReader implements ReservationDataReaderInterface {
 
     return -1;
   }
+  
 }
+

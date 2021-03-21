@@ -1,4 +1,4 @@
-public interface HotelReservationInterface extends Comparable<HotelReservationInterface> {
+public interface HotelReservationInterface {
   public String getName();
 
   public String getCheckInDate();
@@ -7,6 +7,5 @@ public interface HotelReservationInterface extends Comparable<HotelReservationIn
 
   public int getRoomNumber();
 
-  // from super interface Comparable
-  public int compareTo(HotelReservationInterface otherReservation);
+
 }
