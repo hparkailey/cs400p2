@@ -241,7 +241,7 @@ public class Frontend {
 			String startDate = scnr.next();
 			System.out.println(askEndDate);
 			String endDate = scnr.next();
-			List<?> reservations = null;
+			List<HotelReservation> reservations = null;
 
 			// prints out reservations
 			try {
@@ -291,11 +291,12 @@ public class Frontend {
 			System.out.print(askName);
 			name = scnr.nextLine();
 			scnr.nextLine();
-			List<?> reservations = null;
+			List<HotelReservation> reservations = null;
 
 			// prints reservations based on name
 			try {
 				reservations = backend.selectByOccupant(name);
+				System.out.println(reservations);
 				System.out.println("Here are the reservations found for " + name + ":\n");
 				for (int i = 0; i < reservations.size(); i++) {
 					System.out.println(reservations.toString());
