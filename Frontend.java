@@ -26,7 +26,7 @@ import java.util.List;
  *
  */
 public class Frontend {
-	private static Backend backend;
+	private static BackEnd backend;
 	private static Scanner scnr;
 
 	/**
@@ -49,7 +49,7 @@ public class Frontend {
 	 * @throws DataFormatException
 	 * @throws IOException
 	 */
-	public static void run(Backend backEnd) throws IOException, DataFormatException {
+	public static void run(BackEnd backEnd) throws IOException, DataFormatException {
 		String filePath; // String object that contains the filePath to the csvFile
 		String csvAsAString; // String object that contains the csv inputted as a string
 		String userChoice; // Defines the userChoice given a prompt
@@ -68,9 +68,10 @@ public class Frontend {
 
 		// while look to run app
 		while (running) {
+			boolean modeRunning = true;
 			System.out.println(enterFile);
 			userChoice = scnr.next();
-
+			
 			// ASKS USER FOR FILE
 			try {
 				// if user enters x
@@ -82,15 +83,17 @@ public class Frontend {
 				// if user enters f
 				else if (userChoice.equalsIgnoreCase("f")) {
 					System.out.println("Please enter the filepath to the hotel database csv file:\t");
-					filePath = scnr.next();
+					scnr.nextLine();
+					filePath = scnr.nextLine();
 					try {
 						filePathInput = new FileReader(filePath);
 						// initializes the backend with a reader object as the argument
-						backEnd = new Backend(filePathInput);
+						backend = new BackEnd(filePathInput);
 
 					} catch (FileNotFoundException e) {
 						System.out.println("This file does not exist.\n");
-						e.printStackTrace();// handle FileNotFoundException if file is not found
+						//e.printStackTrace();// handle FileNotFoundException if file is not found
+						modeRunning = false;
 						continue;
 					}
 
@@ -99,9 +102,8 @@ public class Frontend {
 					if (userChoice.equalsIgnoreCase("s")) {
 						System.out.println("Please enter a string to the hotel database file:\t");
 						csvAsAString = scnr.next();
-						csvArray[0] = csvAsAString;
-						// intializes backend with a String array as the object
-						backEnd = new Backend(csvArray);
+						// intializes backend with a String as the object
+						backend = new BackEnd(csvAsAString);
 					}
 					// if input is null
 					else if (userChoice.isEmpty() || userChoice.trim().isEmpty()) {
@@ -116,11 +118,10 @@ public class Frontend {
 
 				}
 			} catch (NullPointerException e) {
-				System.out.println(e);
+				System.out.println(e.getMessage());
 				continue;
 			}
-
-			boolean modeRunning = true;
+			
 			// while loop to keep modes running
 			while (modeRunning) {
 				System.out.println(modeOptions);
@@ -174,7 +175,7 @@ public class Frontend {
 	 * 
 	 * @param backEnd
 	 */
-	static void createReservation(Backend backend) {
+	static void createReservation(BackEnd backend) {
 		String askName = "\nWhat is the NAME for the Reservation you would like to make?\t";
 		String askRoomNum = "What is the ROOM NUMBER for the Reservation you would like to make?\t";
 		String askCheckIn = "What is the CHECK IN DATE (mm/dd/yy) for the Reservation you would like to make?\t";
@@ -188,6 +189,7 @@ public class Frontend {
 		while (createRunning) {
 			System.out.print(askName);
 			name = scnr.nextLine();
+			scnr.nextLine();
 			System.out.print(askRoomNum);
 			int roomNum = scnr.nextInt();
 			System.out.print(askCheckIn);
@@ -195,12 +197,12 @@ public class Frontend {
 			System.out.print(askCheckOut);
 			String checkOut = scnr.next();
 
-			backend.add(name, roomNum, checkIn, checkOut);
+			backend.add(name, checkIn, checkOut, roomNum);
 
 			// ask if user wants to search for again
 			while (askAgain) {
 				System.out
-						.println("Would you like to create another reservation? (enter 'y' for yes and 'n' for no):\t");
+						.println("\nWould you like to create another reservation? (enter 'y' for yes and 'n' for no):\t");
 				String userChoice = scnr.next();
 				if (userChoice.equalsIgnoreCase("y")) {
 					break;
@@ -215,7 +217,7 @@ public class Frontend {
 
 		}
 
-		System.out.println("Your reservation for " + name + " has been succesfully made!!");
+		System.out.println("Your reservation has been succesfully made!!");
 
 	}
 
@@ -225,7 +227,7 @@ public class Frontend {
 	 * 
 	 * @param backend
 	 */
-	static void searchByDate(Backend backend) {
+	static void searchByDate(BackEnd backend) {
 		String askStartDate = "What is the START DATE that you would like to look in?"
 				+ "\n(Please enter in format mm/dd/yy)\t";
 		String askEndDate = "What is the END DATE that you would like to look in?"
@@ -278,7 +280,7 @@ public class Frontend {
 	 * 
 	 * @param backend
 	 */
-	static void searchByName(Backend backend) {
+	static void searchByName(BackEnd backend) {
 		String askName = "\nWhat is the NAME (first and last) of the reservation you're looking for is under?\t";
 		String name = "";
 
@@ -288,6 +290,7 @@ public class Frontend {
 		while (searchNameRunning) {
 			System.out.print(askName);
 			name = scnr.nextLine();
+			scnr.nextLine();
 			List<?> reservations = null;
 
 			// prints reservations based on name
