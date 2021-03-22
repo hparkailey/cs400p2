@@ -71,11 +71,11 @@ public class BackEndDeveloperTests {
 		String nameRes1 = "Michael Jordan"; 
 		String nameRes2 = "Sandra Bullock";
 		String checkInDate1 = "08/08/2020";
-		String checkInDate2 = "08/08/2020";
+		String checkInDate2 = "08/10/2020";
 		String checkOutDate1 = "08/18/2020";
 		String checkOutDate2 = "08/14/2020";
 		int roomNumberRes1 = 3124;
-		int roomNumberRes2 = 3124;
+		int roomNumberRes2 = 3125;
 
 		Reader filePathInput;
 		filePathInput = new FileReader("Reservations.csv");
@@ -85,6 +85,7 @@ public class BackEndDeveloperTests {
 			backEnd = new BackEnd(filePathInput);
 			backEnd.add(nameRes1, checkInDate1, checkOutDate1, roomNumberRes1); // add a new reservation
 			assertEquals(42, backEnd.getSize()); // see if the size increases by 1
+			backEnd.selectByOccupant("Michael Jordan");
 			backEnd.add(nameRes2, checkInDate2, checkOutDate2, roomNumberRes2); // add a new Reservation
 			assertEquals(43, backEnd.getSize()); // see if the size increases by 1
 		} catch (IOException | DataFormatException e) {

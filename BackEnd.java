@@ -1,4 +1,3 @@
-
 // --== CS400 File Header Information ==--
 // Name: Gabriela Setyawan
 // Email: gsetyawan@wisc.edu
@@ -18,8 +17,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.DataFormatException;
-
-
 /**
  * BackEnd class to put reservation data in the red black tree data structure
  * depending on the month of the reservation object
@@ -38,7 +35,6 @@ public class BackEnd {
 	protected List<HotelReservation> reservationListBasedOnName= new ArrayList<HotelReservation>(); // list of HotelReservation Objects based on the name
 	protected List<HotelReservation> reservationListBasedOnDate = new ArrayList<HotelReservation>(); // list of HotelReservation Objects based on the
 																	// checkInDate and checkOutDate
-
 	/**
 	 * Constructor for BackEnd object which takes in string from the user to put as
 	 * elements in the corresponding RedBlackTree (depending on month)
@@ -116,9 +112,9 @@ public class BackEnd {
 	public void add(String name, String checkInDate, String checkOutDate, int roomNumber)
 			throws IllegalArgumentException {
 		HotelReservation newReservation;
-		newReservation = new HotelReservation(name, checkInDate, checkOutDate, roomNumber); // create a new HotelReservation object from 
+		newReservation = new HotelReservation(name, checkInDate, checkOutDate, roomNumber);
+		reservationList.add(newReservation);
 		redBlackTreeMonthSelector(newReservation); // call the private helper method to determine where to add the node to
-
 	}
 
 	/**
