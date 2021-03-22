@@ -25,33 +25,6 @@ import java.io.PrintStream;
 class FrontEndDeveloperTests {
 
 	@Test
-	void testMain() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testRun() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testCreateReservation() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testSearchByDate() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testSearchByName() {
-		fail("Not yet implemented");
-	}
-
-	// FIX INPUTS TO TAKE IN CSV FILE
-
-	@Test
 	/**
 	 * This will test requesting reservations in a range of dates and compare them
 	 * to the expected output. The user will be prompted two questions: what date
@@ -64,16 +37,17 @@ class FrontEndDeveloperTests {
 	 * @return true if the test passed, false if it failed
 	 */
 	void testViewReservationsByDate() {
+		
 		PrintStream standardOut = System.out;
 		InputStream standardIn = System.in;
 		try {
-			// set the input stream to our input (with 2 numbers to test if the program
+			// set the input stream to our input (with 2 dates to test if the program
 			// lists
 			// the correct reservations) and r for return to main screen and x to exit out
 			// of program
 			String input = "f" + System.lineSeparator() + "Reservations.csv" + System.lineSeparator() + "b"
 					+ System.lineSeparator() + "06/02/2020" + System.lineSeparator() + "06/11/2020"
-					+ System.lineSeparator() + "r" + System.lineSeparator() + "x";
+					+ System.lineSeparator();
 			InputStream inputStreamSimulator = new ByteArrayInputStream(input.getBytes());
 			System.setIn(inputStreamSimulator);
 			ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
@@ -88,7 +62,7 @@ class FrontEndDeveloperTests {
 			// add all tests to this method
 			String appOutput = outputStreamCaptor.toString();
 			// want to return reservations made by Bob and Marla
-			if (frontend == null && !appOutput.equals("Gaby Setyawan, 06/02/2020-06/11/2020, room 3149")) {
+			if (frontend == null && !appOutput.equals("[Gaby Setyawan, 06/02/2020-06/11/2020, room 3149]")) {
 				// test failed
 				fail("testViewReservationsByDate() failed");
 			}
@@ -137,7 +111,7 @@ class FrontEndDeveloperTests {
 			// add all tests to this method
 			String appOutput = outputStreamCaptor.toString();
 			// want to return reservations made on the 3, 4, and 5
-			if (frontend == null && !appOutput.equals("Jessica Xu, 06/28/2020-06/30/2020, room 5099")) {
+			if (frontend == null && !appOutput.equals("[Jessica Xu, 06/28/2020-06/30/2020, room 5099]")) {
 				// test passes if these specific Reservations from the data are displayed on the
 				// screen
 			} else {
