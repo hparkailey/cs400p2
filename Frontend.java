@@ -182,16 +182,14 @@ public class Frontend {
 		String askRoomNum = "What is the ROOM NUMBER (4 digits) for the Reservation you would like to make?\t";
 		String askCheckIn = "What is the CHECK IN DATE (mm/dd/yyyy) for the Reservation you would like to make? (must be between 06/01/2020 - 08/31/2020)\t";
 		String askCheckOut = "What is the CHECK OUT DATE (mm/dd/yyyy) for the Reservation you would like to make? (must be between 06/01/2020 - 08/31/2020)\t";
-		
-//		String name = "";
 
 		boolean createRunning = true;
 		boolean askAgain = true;
 
 		while (createRunning) {
 			System.out.print(askName);
-			String name = scnr.nextLine();
 			scnr.nextLine();
+			String name = scnr.nextLine();
 			System.out.print(askRoomNum);
 			int roomNum = scnr.nextInt();
 			System.out.print(askCheckIn);
@@ -289,15 +287,15 @@ public class Frontend {
 		boolean askAgain = true;
 
 		while (searchNameRunning) {
+			scnr.nextLine();
 			System.out.print(askName);
-			name = "Jess";
-//			scnr.nextLine();
+			name = scnr.nextLine();
 			List<HotelReservation> reservations = null;
 
 			// prints reservations based on name
 			try {
 				reservations = backend.selectByOccupant(name);
-				System.out.println("Here are the reservations found for " + name + ":\n");
+				System.out.println("Here are the reservations found for " + name + ":");
 				for (int i = 0; i < reservations.size(); i++) {
 					System.out.println(reservations.toString());
 				}
@@ -307,7 +305,7 @@ public class Frontend {
 
 			// ask if user wants to search for again
 			while (askAgain) {
-				System.out.print("Would you like to search by name again? (enter 'y' for yes and 'n' for no):\t");
+				System.out.print("\nWould you like to search by name again? (enter 'y' for yes and 'n' for no):\t");
 				String userChoice = scnr.next();
 				if (userChoice.equalsIgnoreCase("y")) {
 					break;
