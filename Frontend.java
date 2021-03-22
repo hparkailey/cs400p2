@@ -58,9 +58,11 @@ public class Frontend {
 
 		String[] csvArray = new String[1];
 		scnr = new Scanner(System.in);
-		System.out.println("************ WELCOME TO THE HOTEL DATABASE! ************");
+		System.out.println("************ WELCOME TO THE HOTEL DATABASE! ************"
+				+ "\nThis program lets you create reservations and view previous and newly made reservations.\n");
 
-		String enterFile = "This is the FILE SCREEN.\nEnter 'x' to quit \nEnter 'f' to enter a filepath \nEnter 's' to enter a string";
+		String enterFile = "This is the FILE SCREEN.\n(Please enter a file to proceed with the program.)"
+				+ "\nEnter 'x' to quit \nEnter 'f' to enter a filepath \nEnter 's' to enter a string";
 		String modeOptions = "\nThis is the MAIN SCREEN.\nThere are three options to choose from in this app. Enter the letter corresponding to the mode you'd like to go to.\n"
 				+ "\tA. Create a reservation\n\tB. View reservations based by dates\n\tC. Search reservations based on guest name\n"
 				+ "Enter 'r' to go back to the file screen and 'x' to quit.\n";
@@ -177,18 +179,18 @@ public class Frontend {
 	 */
 	static void createReservation(BackEnd backend) {
 		String askName = "\nWhat is the NAME for the Reservation you would like to make?\t";
-		String askRoomNum = "What is the ROOM NUMBER for the Reservation you would like to make?\t";
-		String askCheckIn = "What is the CHECK IN DATE (mm/dd/yy) for the Reservation you would like to make?\t";
-		String askCheckOut = "What is the CHECK OUT DATE (mm/dd/yy) for the Reservation you would like to make?\t";
+		String askRoomNum = "What is the ROOM NUMBER (4 digits) for the Reservation you would like to make?\t";
+		String askCheckIn = "What is the CHECK IN DATE (mm/dd/yyyy) for the Reservation you would like to make? (must be between 06/01/2020 - 08/31/2020)\t";
+		String askCheckOut = "What is the CHECK OUT DATE (mm/dd/yyyy) for the Reservation you would like to make? (must be between 06/01/2020 - 08/31/2020)\t";
 		
-		String name = "";
+//		String name = "";
 
 		boolean createRunning = true;
 		boolean askAgain = true;
 
 		while (createRunning) {
 			System.out.print(askName);
-			name = scnr.nextLine();
+			String name = scnr.nextLine();
 			scnr.nextLine();
 			System.out.print(askRoomNum);
 			int roomNum = scnr.nextInt();
@@ -198,6 +200,7 @@ public class Frontend {
 			String checkOut = scnr.next();
 
 			backend.add(name, checkIn, checkOut, roomNum);
+			System.out.println("Your reservation has been succesfully made!!\n");
 
 			// ask if user wants to search for again
 			while (askAgain) {
@@ -217,8 +220,6 @@ public class Frontend {
 
 		}
 
-		System.out.println("Your reservation has been succesfully made!!");
-
 	}
 
 	/**
@@ -228,25 +229,25 @@ public class Frontend {
 	 * @param backend
 	 */
 	static void searchByDate(BackEnd backend) {
-		String askStartDate = "What is the START DATE that you would like to look in?"
-				+ "\n(Please enter in format mm/dd/yy)\t";
-		String askEndDate = "What is the END DATE that you would like to look in?"
-				+ "\n(Please enter in format mm/dd/yy)\t";
+		String askStartDate = "What is the exact START DATE that you would like to look for (what date reservations are made on)?"
+				+ "\n(Please enter in format mm/dd/yyyy and must be between 06/01/2020 - 08/31/2020)\t";
+		String askEndDate = "What is the exact END DATE that you would like to look for (what date reservations are made on)?"
+				+ "\n(Please enter in format mm/dd/yyyy and must be between 06/01/20 - 08/31/2020)\t";
 
 		boolean searchDateRunning = true;
 		boolean askAgain = true;
 
 		while (searchDateRunning) {
-			System.out.println(askStartDate);
+			System.out.print(askStartDate);
 			String startDate = scnr.next();
-			System.out.println(askEndDate);
+			System.out.print(askEndDate);
 			String endDate = scnr.next();
 			List<HotelReservation> reservations = null;
 
 			// prints out reservations
 			try {
 				reservations = backend.selectByDate(startDate, endDate);
-				System.out.println("Here are the reservations between " + startDate + " and " + endDate + ":\n");
+				System.out.println("\nHere are the reservations between " + startDate + " and " + endDate + ":");
 				for (int i = 0; i < reservations.size(); i++) {
 					System.out.println(reservations.toString());
 				}
@@ -257,7 +258,7 @@ public class Frontend {
 
 			// ask if user wants to search for again
 			while (askAgain) {
-				System.out.println("Would you like to search by date again? (enter 'y' for yes and 'n' for no):\t");
+				System.out.println("\nWould you like to search by date again? (enter 'y' for yes and 'n' for no):\t");
 				String userChoice = scnr.next();
 				if (userChoice.equalsIgnoreCase("y")) {
 					break;
@@ -289,14 +290,13 @@ public class Frontend {
 
 		while (searchNameRunning) {
 			System.out.print(askName);
-			name = scnr.nextLine();
-			scnr.nextLine();
+			name = "Jess";
+//			scnr.nextLine();
 			List<HotelReservation> reservations = null;
 
 			// prints reservations based on name
 			try {
 				reservations = backend.selectByOccupant(name);
-				System.out.println(reservations);
 				System.out.println("Here are the reservations found for " + name + ":\n");
 				for (int i = 0; i < reservations.size(); i++) {
 					System.out.println(reservations.toString());
@@ -307,7 +307,7 @@ public class Frontend {
 
 			// ask if user wants to search for again
 			while (askAgain) {
-				System.out.println("Would you like to search by name again? (enter 'y' for yes and 'n' for no):\t");
+				System.out.print("Would you like to search by name again? (enter 'y' for yes and 'n' for no):\t");
 				String userChoice = scnr.next();
 				if (userChoice.equalsIgnoreCase("y")) {
 					break;
