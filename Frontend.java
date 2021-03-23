@@ -73,7 +73,7 @@ public class Frontend {
 			boolean modeRunning = true;
 			System.out.println(enterFile);
 			userChoice = scnr.next();
-			
+
 			// ASKS USER FOR FILE
 			try {
 				// if user enters x
@@ -94,7 +94,7 @@ public class Frontend {
 
 					} catch (FileNotFoundException e) {
 						System.out.println("This file does not exist.\n");
-						//e.printStackTrace();// handle FileNotFoundException if file is not found
+						// e.printStackTrace();// handle FileNotFoundException if file is not found
 						modeRunning = false;
 						continue;
 					}
@@ -123,7 +123,7 @@ public class Frontend {
 				System.out.println(e.getMessage());
 				continue;
 			}
-			
+
 			// while loop to keep modes running
 			while (modeRunning) {
 				System.out.println(modeOptions);
@@ -179,9 +179,9 @@ public class Frontend {
 	 */
 	static void createReservation(BackEnd backend) {
 		String askName = "\nWhat is the NAME for the Reservation you would like to make?\t";
-		String askRoomNum = "What is the ROOM NUMBER (4 digits) for the Reservation you would like to make?\t";
-		String askCheckIn = "What is the CHECK IN DATE (mm/dd/yyyy) for the Reservation you would like to make? (must be between 06/01/2020 - 08/31/2020)\t";
-		String askCheckOut = "What is the CHECK OUT DATE (mm/dd/yyyy) for the Reservation you would like to make? (must be between 06/01/2020 - 08/31/2020)\t";
+		String askRoomNum = "\nWhat is the ROOM NUMBER (4 digits) for the Reservation you would like to make?\t";
+		String askCheckIn = "\nWhat is the CHECK IN DATE (mm/dd/yyyy) for the Reservation you would like to make? (must be between 06/01/2020 - 08/31/2020)\t";
+		String askCheckOut = "\nWhat is the CHECK OUT DATE (mm/dd/yyyy) for the Reservation you would like to make? (must be between 06/01/2020 - 08/31/2020)\t";
 
 		boolean createRunning = true;
 		boolean askAgain = true;
@@ -197,13 +197,17 @@ public class Frontend {
 			System.out.print(askCheckOut);
 			String checkOut = scnr.next();
 
-			backend.add(name, checkIn, checkOut, roomNum);
-			System.out.println("Your reservation has been succesfully made!!\n");
+			try {
+				backend.add(name, checkIn, checkOut, roomNum);
+				System.out.println("\nYour reservation has been succesfully made!!\n");
+			} catch (IllegalArgumentException e) {
+				System.out.println("\nThere is already a reservation made exactly like the one you entered.");
+			}
 
 			// ask if user wants to search for again
 			while (askAgain) {
-				System.out
-						.println("\nWould you like to create another reservation? (enter 'y' for yes and 'n' for no):\t");
+				System.out.println(
+						"\nWould you like to create another reservation? (enter 'y' for yes and 'n' for no):\t");
 				String userChoice = scnr.next();
 				if (userChoice.equalsIgnoreCase("y")) {
 					break;
@@ -227,9 +231,9 @@ public class Frontend {
 	 * @param backend
 	 */
 	static void searchByDate(BackEnd backend) {
-		String askStartDate = "What is the exact START DATE that you would like to look for (what date reservations are made on)?"
+		String askStartDate = "\nWhat is the exact START DATE that you would like to look for (what date reservations are made on)?"
 				+ "\n(Please enter in format mm/dd/yyyy and must be between 06/01/2020 - 08/31/2020)\t";
-		String askEndDate = "What is the exact END DATE that you would like to look for (what date reservations are made on)?"
+		String askEndDate = "\nWhat is the exact END DATE that you would like to look for (what date reservations are made on)?"
 				+ "\n(Please enter in format mm/dd/yyyy and must be between 06/01/20 - 08/31/2020)\t";
 
 		boolean searchDateRunning = true;
@@ -295,7 +299,7 @@ public class Frontend {
 			// prints reservations based on name
 			try {
 				reservations = backend.selectByOccupant(name);
-				System.out.println("Here are the reservations found for " + name + ":");
+				System.out.println("\nHere are the reservations found for " + name + ":");
 				for (int i = 0; i < reservations.size(); i++) {
 					System.out.println(reservations.toString());
 				}
