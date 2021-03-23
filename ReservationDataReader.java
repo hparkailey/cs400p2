@@ -30,7 +30,7 @@ public class ReservationDataReader {
    * objects
    * 
    * @param inputFileReader Reader of csv file containing reservation data
-   * @return List<HotelReservationInterface> list of hotel reservations contained in csv
+   * @return List<HotelReservation> list of hotel reservations contained in csv
    * @see convertReservation()
    * @throws FileNotFoundException
    * @throws IOException

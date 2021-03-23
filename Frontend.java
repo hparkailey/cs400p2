@@ -58,9 +58,11 @@ public class Frontend {
 
 		String[] csvArray = new String[1];
 		scnr = new Scanner(System.in);
-		System.out.println("************ WELCOME TO THE HOTEL DATABASE! ************");
+		System.out.println("************ WELCOME TO THE HOTEL DATABASE! ************"
+				+ "\nThis program lets you create reservations and view previous and newly made reservations.\n");
 
-		String enterFile = "This is the FILE SCREEN.\nEnter 'x' to quit \nEnter 'f' to enter a filepath \nEnter 's' to enter a string";
+		String enterFile = "This is the FILE SCREEN.\n(Please enter a file to proceed with the program.)"
+				+ "\nEnter 'x' to quit \nEnter 'f' to enter a filepath \nEnter 's' to enter a string";
 		String modeOptions = "\nThis is the MAIN SCREEN.\nThere are three options to choose from in this app. Enter the letter corresponding to the mode you'd like to go to.\n"
 				+ "\tA. Create a reservation\n\tB. View reservations based by dates\n\tC. Search reservations based on guest name\n"
 				+ "Enter 'r' to go back to the file screen and 'x' to quit.\n";
@@ -68,9 +70,10 @@ public class Frontend {
 
 		// while look to run app
 		while (running) {
+			boolean modeRunning = true;
 			System.out.println(enterFile);
 			userChoice = scnr.next();
-
+			
 			// ASKS USER FOR FILE
 			try {
 				// if user enters x
@@ -82,15 +85,17 @@ public class Frontend {
 				// if user enters f
 				else if (userChoice.equalsIgnoreCase("f")) {
 					System.out.println("Please enter the filepath to the hotel database csv file:\t");
-					filePath = scnr.next();
+					scnr.nextLine();
+					filePath = scnr.nextLine();
 					try {
 						filePathInput = new FileReader(filePath);
 						// initializes the backend with a reader object as the argument
-						backEnd = new BackEnd(filePathInput);
+						backend = new BackEnd(filePathInput);
 
 					} catch (FileNotFoundException e) {
 						System.out.println("This file does not exist.\n");
-						e.printStackTrace();// handle FileNotFoundException if file is not found
+						//e.printStackTrace();// handle FileNotFoundException if file is not found
+						modeRunning = false;
 						continue;
 					}
 
@@ -99,9 +104,8 @@ public class Frontend {
 					if (userChoice.equalsIgnoreCase("s")) {
 						System.out.println("Please enter a string to the hotel database file:\t");
 						csvAsAString = scnr.next();
-						csvArray[0] = csvAsAString;
-						// intializes backend with a String array as the object
-						backEnd = new BackEnd(csvAsAString);
+						// intializes backend with a String as the object
+						backend = new BackEnd(csvAsAString);
 					}
 					// if input is null
 					else if (userChoice.isEmpty() || userChoice.trim().isEmpty()) {
@@ -116,11 +120,10 @@ public class Frontend {
 
 				}
 			} catch (NullPointerException e) {
-				System.out.println(e);
+				System.out.println(e.getMessage());
 				continue;
 			}
-
-			boolean modeRunning = true;
+			
 			// while loop to keep modes running
 			while (modeRunning) {
 				System.out.println(modeOptions);
@@ -176,19 +179,18 @@ public class Frontend {
 	 */
 	static void createReservation(BackEnd backend) {
 		String askName = "\nWhat is the NAME for the Reservation you would like to make?\t";
-		String askRoomNum = "What is the ROOM NUMBER for the Reservation you would like to make?\t";
-		String askCheckIn = "What is the CHECK IN DATE (mm/dd/yy) for the Reservation you would like to make?\t";
-		String askCheckOut = "What is the CHECK OUT DATE (mm/dd/yy) for the Reservation you would like to make?\t";
-		
-		String name = "";
+		String askRoomNum = "What is the ROOM NUMBER (4 digits) for the Reservation you would like to make?\t";
+		String askCheckIn = "What is the CHECK IN DATE (mm/dd/yyyy) for the Reservation you would like to make? (must be between 06/01/2020 - 08/31/2020)\t";
+		String askCheckOut = "What is the CHECK OUT DATE (mm/dd/yyyy) for the Reservation you would like to make? (must be between 06/01/2020 - 08/31/2020)\t";
 
 		boolean createRunning = true;
 		boolean askAgain = true;
 
 		while (createRunning) {
-			System.out.println(askName);
-			name = scnr.nextLine();
-			System.out.println(askRoomNum);
+			System.out.print(askName);
+			scnr.nextLine();
+			String name = scnr.nextLine();
+			System.out.print(askRoomNum);
 			int roomNum = scnr.nextInt();
 			System.out.print(askCheckIn);
 			String checkIn = scnr.next();
@@ -196,11 +198,12 @@ public class Frontend {
 			String checkOut = scnr.next();
 
 			backend.add(name, checkIn, checkOut, roomNum);
+			System.out.println("Your reservation has been succesfully made!!\n");
 
 			// ask if user wants to search for again
 			while (askAgain) {
 				System.out
-						.println("Would you like to create another reservation? (enter 'y' for yes and 'n' for no):\t");
+						.println("\nWould you like to create another reservation? (enter 'y' for yes and 'n' for no):\t");
 				String userChoice = scnr.next();
 				if (userChoice.equalsIgnoreCase("y")) {
 					break;
@@ -215,8 +218,6 @@ public class Frontend {
 
 		}
 
-		System.out.println("Your reservation for " + name + " has been succesfully made!!");
-
 	}
 
 	/**
@@ -226,25 +227,25 @@ public class Frontend {
 	 * @param backend
 	 */
 	static void searchByDate(BackEnd backend) {
-		String askStartDate = "What is the START DATE that you would like to look in?"
-				+ "\n(Please enter in format mm/dd/yy)\t";
-		String askEndDate = "What is the END DATE that you would like to look in?"
-				+ "\n(Please enter in format mm/dd/yy)\t";
+		String askStartDate = "What is the exact START DATE that you would like to look for (what date reservations are made on)?"
+				+ "\n(Please enter in format mm/dd/yyyy and must be between 06/01/2020 - 08/31/2020)\t";
+		String askEndDate = "What is the exact END DATE that you would like to look for (what date reservations are made on)?"
+				+ "\n(Please enter in format mm/dd/yyyy and must be between 06/01/20 - 08/31/2020)\t";
 
 		boolean searchDateRunning = true;
 		boolean askAgain = true;
 
 		while (searchDateRunning) {
-			System.out.println(askStartDate);
+			System.out.print(askStartDate);
 			String startDate = scnr.next();
-			System.out.println(askEndDate);
+			System.out.print(askEndDate);
 			String endDate = scnr.next();
-			List<?> reservations = null;
+			List<HotelReservation> reservations = null;
 
 			// prints out reservations
 			try {
 				reservations = backend.selectByDate(startDate, endDate);
-				System.out.println("Here are the reservations between " + startDate + " and " + endDate + ":\n");
+				System.out.println("\nHere are the reservations between " + startDate + " and " + endDate + ":");
 				for (int i = 0; i < reservations.size(); i++) {
 					System.out.println(reservations.toString());
 				}
@@ -255,7 +256,7 @@ public class Frontend {
 
 			// ask if user wants to search for again
 			while (askAgain) {
-				System.out.println("Would you like to search by date again? (enter 'y' for yes and 'n' for no):\t");
+				System.out.println("\nWould you like to search by date again? (enter 'y' for yes and 'n' for no):\t");
 				String userChoice = scnr.next();
 				if (userChoice.equalsIgnoreCase("y")) {
 					break;
@@ -286,14 +287,15 @@ public class Frontend {
 		boolean askAgain = true;
 
 		while (searchNameRunning) {
+			scnr.nextLine();
 			System.out.print(askName);
 			name = scnr.nextLine();
-			List<?> reservations = null;
+			List<HotelReservation> reservations = null;
 
 			// prints reservations based on name
 			try {
 				reservations = backend.selectByOccupant(name);
-				System.out.println("Here are the reservations found for " + name + ":\n");
+				System.out.println("Here are the reservations found for " + name + ":");
 				for (int i = 0; i < reservations.size(); i++) {
 					System.out.println(reservations.toString());
 				}
@@ -303,7 +305,7 @@ public class Frontend {
 
 			// ask if user wants to search for again
 			while (askAgain) {
-				System.out.println("Would you like to search by name again? (enter 'y' for yes and 'n' for no):\t");
+				System.out.print("\nWould you like to search by name again? (enter 'y' for yes and 'n' for no):\t");
 				String userChoice = scnr.next();
 				if (userChoice.equalsIgnoreCase("y")) {
 					break;
